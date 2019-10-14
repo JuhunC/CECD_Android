@@ -1,5 +1,7 @@
 package com.example.cecd;
 
+import com.example.cecd.ui.ImageData;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -11,5 +13,5 @@ import retrofit2.http.Part;
 public interface UploadAPIs {
     @Multipart
     @POST("/yolov3")
-    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file, @Part("name") RequestBody requestBody);
+    Call<String> uploadImage(@Part MultipartBody.Part file, @Part("name") RequestBody requestBody);
 }

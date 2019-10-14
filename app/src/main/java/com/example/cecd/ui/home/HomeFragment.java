@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,7 +22,13 @@ import androidx.loader.content.CursorLoader;
 import com.example.cecd.NetworkClient;
 import com.example.cecd.R;
 import com.example.cecd.UploadAPIs;
+import com.example.cecd.ui.ImageData;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -115,15 +122,32 @@ public class HomeFragment extends Fragment {
         //Create request body with text description and text media type
         RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
         //
-        Call call = uploadAPIs.uploadImage(part, description);
-        call.enqueue(new Callback() {
+        Call<String> call = uploadAPIs.uploadImage(part, description);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call call, Response response) {
-                Log.e("Success",response.message());
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.e("ResBody", response.toString());
+                Log.e("Body",response.body().toString());
+
+
+//                Log.e("message :", new Gson().toJson(response.body()));
+//                try {
+//                    Log.e("Success", response.message());
+//                    Log.e("Body", response.body().toString());
+//                    Log.e("header", response.headers().toString());
+//                    Log.e("response", response.toString());
+//                    JsonObject post = new JsonObject()
+//                            .get(response.body().toString())
+//                            .getAsJsonObject();
+//                    Log.e("Json", post.getAsString());
+//                }catch(Exception e){
+//                    Log.e("Error", e.getMessage());
+//                }
             }
             @Override
             public void onFailure(Call call, Throwable t){
                 Log.e("Failed", t.getMessage());
+                t.printStackTrace();
             }
         });
     }
