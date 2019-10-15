@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Iterator;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -127,25 +128,21 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.e("ResBody", response.toString());
-                Log.e("Body",response.body().toString());
-
-
-//                Log.e("message :", new Gson().toJson(response.body()));
-//                try {
-//                    Log.e("Success", response.message());
-//                    Log.e("Body", response.body().toString());
-//                    Log.e("header", response.headers().toString());
-//                    Log.e("response", response.toString());
-//                    JsonObject post = new JsonObject()
-//                            .get(response.body().toString())
-//                            .getAsJsonObject();
-//                    Log.e("Json", post.getAsString());
-//                }catch(Exception e){
-//                    Log.e("Error", e.getMessage());
-//                }
+//                Log.e("Body",response.body().toString());
+                try {
+                    JSONObject mainObject = new JSONObject(response.body());
+                    Iterator<String> keys = mainObject.keys();
+                    while(keys.hasNext()){
+                        String key = keys.next();
+                        Object val = mainObject.get(key);
+                        Log.e(key,val.toString());
+                    }
+                }catch(JSONException e){
+                    e.printStackTrace();
+                }
             }
             @Override
-            public void onFailure(Call call, Throwable t){
+            public void onFailure(Call<String> call, Throwable t){
                 Log.e("Failed", t.getMessage());
                 t.printStackTrace();
             }
