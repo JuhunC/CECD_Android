@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment {
     Button imgsel,upload;
     ImageView img;
     String path;
+    JSONObject mainObject; // coordinate value from the server
     private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -130,7 +131,7 @@ public class HomeFragment extends Fragment {
                 Log.e("ResBody", response.toString());
 //                Log.e("Body",response.body().toString());
                 try {
-                    JSONObject mainObject = new JSONObject(response.body());
+                    mainObject = new JSONObject(response.body());
                     Iterator<String> keys = mainObject.keys();
                     while(keys.hasNext()){
                         String key = keys.next();
