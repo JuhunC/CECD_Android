@@ -12,13 +12,14 @@
         <LinearLayout
             android:layout_height="0dp"
             android:layout_width="match_parent"
+            android:gravity="center"
             android:layout_weight="2" >
 
             <ImageView
                 android:id="@+id/img_dashboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/object_list"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -31,28 +32,49 @@
         <LinearLayout
             android:layout_height="0dp"
             android:layout_width="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:weightSum="2"
+            android:paddingBottom="50dp">
 
 
             <ListView
                 android:id="@+id/object_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:descendantFocusability="afterDescendants"
                 android:divider="@android:color/white"
                 android:dividerHeight="2dp"
                 android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="@id/button"
-                app:layout_constraintStart_toStartOf="@id/img_dashboard"
-                app:layout_constraintTop_toBottomOf="@id/img_dashboard"></ListView>
+                android:layout_gravity="right"
+                app:layout_constraintEnd_toEndOf="@id/btn_layout">
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
+            </ListView>
+
+            <LinearLayout
+                android:id="@+id/btn_layout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Button"
-                android:visibility="visible" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/regenerate_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="ReGenerate"
+                    android:visibility="visible" />
+                <Button
+                    android:id="@+id/add_label_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Add Object"
+                    android:visibility="visible" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
