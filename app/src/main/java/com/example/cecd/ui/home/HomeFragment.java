@@ -12,19 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.content.CursorLoader;
+import androidx.navigation.Navigation;
 
 import com.example.cecd.NetworkClient;
 import com.example.cecd.R;
 import com.example.cecd.UploadAPIs;
-import com.example.cecd.ui.ImageData;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.example.cecd.ui.SharedViewModel;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONException;
@@ -44,10 +42,11 @@ import retrofit2.Retrofit;
 import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment {
-    Button imgsel,upload;
-    ImageView img;
-    String path;
-    JSONObject mainObject; // coordinate value from the server
+    private static SharedViewModel svm = new SharedViewModel();
+    private static Button imgsel,upload;
+    private static ImageView img;
+    private static String path;
+    //JSONObject mainObject; // coordinate value from the server
     private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -66,12 +65,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.e("Path",path);
-                File f = new File(path);
                 uploadToServer(path); // Upload to Server
             }
 
         });
-
         imgsel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +81,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
 
         return root;
     }
@@ -123,24 +119,29 @@ public class HomeFragment extends Fragment {
         MultipartBody.Part part = MultipartBody.Part.createFormData("image", file.getName(), fileReqBody);
         //Create request body with text description and text media type
         RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
-        //
+
+        // Receive Object Coordinates from the Server as an JSON Object
         Call<String> call = uploadAPIs.uploadImage(part, description);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.e("ResBody", response.toString());
-//                Log.e("Body",response.body().toString());
                 try {
-                    mainObject = new JSONObject(response.body());
-                    Iterator<String> keys = mainObject.keys();
+                    JSONObject mainObject = new JSONObject(response.body());
+                    svm.select(mainObject);
+                    Iterator<String> keys = svm.getSelected().keys();
                     while(keys.hasNext()){
                         String key = keys.next();
-                        Object val = mainObject.get(key);
+                        Object val = svm.getSelected().get(key);
                         Log.e(key,val.toString());
-                    }
+
+                    }// end of while
+
+
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
+                Navigation.findNavController(getView()).navigate(R.id.action_navigation_home_to_navigation_dashboard);
             }
             @Override
             public void onFailure(Call<String> call, Throwable t){
