@@ -3,6 +3,8 @@ package com.example.cecd.ui.home;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -45,7 +47,7 @@ public class HomeFragment extends Fragment {
     private static SharedViewModel svm = new SharedViewModel();
     private static Button imgsel,upload;
     private static ImageView img;
-    private static String path;
+    //private static String path;
     //JSONObject mainObject; // coordinate value from the server
     private HomeViewModel homeViewModel;
 
@@ -60,12 +62,18 @@ public class HomeFragment extends Fragment {
 
         imgsel = root.findViewById(R.id.select_img);
         upload = root.findViewById(R.id.uploading);
-        upload.setVisibility(View.INVISIBLE);
+        if(svm.getPath()==""){
+            upload.setVisibility(View.INVISIBLE);
+        }else{
+            Bitmap myBitmap = BitmapFactory.decodeFile(svm.getPath());
+            img.setImageBitmap(myBitmap);
+            upload.setVisibility(View.VISIBLE);
+        }
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Path",path);
-                uploadToServer(path); // Upload to Server
+                Log.e("Path",svm.getPath());
+                uploadToServer(svm.getPath()); // Upload to Server
             }
 
         });
@@ -92,7 +100,8 @@ public class HomeFragment extends Fragment {
         switch (requestCode) {
             case 100:
                 if (resultCode == RESULT_OK) {
-                    path = getPathFromURI(data.getData());
+                    String path = getPathFromURI(data.getData());
+                    svm.setPath(path);
                     img.setImageURI(data.getData());
                     upload.setVisibility(View.VISIBLE);
 
