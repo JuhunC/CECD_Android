@@ -14,12 +14,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+
             <ImageView
                 android:id="@+id/img_dashboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
                 android:layout_gravity="center_horizontal"
+                android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/object_list"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -28,13 +29,15 @@
 
             <ListView
                 android:id="@+id/object_list"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:visibility="visible"
+                android:divider="@android:color/white"
+                android:dividerHeight="2dp"
+                android:descendantFocusability="afterDescendants"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/img_dashboard" >
-
             </ListView>
 
             <Button
