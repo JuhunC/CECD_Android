@@ -57,49 +57,48 @@ public class DashboardFragment extends Fragment {
 
         object_list.setAdapter(adapter);
 
+        img = root.findViewById(R.id.img_dashboard);
 
         // Draw Rectangle on the image using JSON data
+        this.update();
 
-
-
-
-        // Show Image
-        File imgFile = new  File(svm.getPath());
-        if(imgFile.exists()){
-            Log.e("path",svm.getPath());
-
-            Bitmap bmp=BitmapFactory.decodeFile(svm.getPath()).copy(Bitmap.Config.RGB_565, true);//(img.getHeight(),img.getWidth(),Bitmap.Config.RGB_565);
-
-            Canvas canvas = new Canvas(bmp);
-            for(int i =0;i<objects.size();i++){
-                Data data = objects.get(i);
-                if(data.isChecked() == true){
-                    Paint paint = new Paint();
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setStrokeWidth(10);
-                    paint.setColor(Color.RED);
-                    paint.setAntiAlias(true);
-
-                    // left, top, right, bottom
-                    Rect rect = new Rect(
-                            data.getX(),
-                            data.getY(),
-                            data.getWidth() + data.getX(),
-                            data.getHeight() + data.getY()
-                        );
-
-                    canvas.drawRect(rect, paint);
-                }
-            }
-
-
-
-//            bit_Img = root.findViewById(R.id.bit_img_dashboard);
-            img = root.findViewById(R.id.img_dashboard);
-            img.setImageBitmap(bmp);
-        }else { // If there is no image
-            getFragmentManager().popBackStack();
-        }
+//        // Show Image
+//        File imgFile = new  File(svm.getPath());
+//        if(imgFile.exists()){
+//            Log.e("path",svm.getPath());
+//
+//            Bitmap bmp=BitmapFactory.decodeFile(svm.getPath()).copy(Bitmap.Config.RGB_565, true);//(img.getHeight(),img.getWidth(),Bitmap.Config.RGB_565);
+//
+//            Canvas canvas = new Canvas(bmp);
+//            for(int i =0;i<objects.size();i++){
+//                Data data = objects.get(i);
+//                if(data.isChecked() == true){
+//                    Paint paint = new Paint();
+//                    paint.setStyle(Paint.Style.STROKE);
+//                    paint.setStrokeWidth(R.dimen.rectangle_stroke_thickness);
+//                    paint.setColor(Color.RED);
+//                    paint.setAntiAlias(true);
+//
+//                    // left, top, right, bottom
+//                    Rect rect = new Rect(
+//                            data.getX(),
+//                            data.getY(),
+//                            data.getWidth() + data.getX(),
+//                            data.getHeight() + data.getY()
+//                        );
+//
+//                    canvas.drawRect(rect, paint);
+//                }
+//            }
+//
+//
+//
+//
+//
+//            img.setImageBitmap(bmp);
+//        }else { // If there is no image
+//            getFragmentManager().popBackStack();
+//        }
 
         return root;
     }
@@ -137,7 +136,7 @@ public class DashboardFragment extends Fragment {
             if(data.isChecked() == true){
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.STROKE);
-                paint.setStrokeWidth(10);
+                paint.setStrokeWidth(10); // set rectangle stroke thickness
                 paint.setColor(Color.RED);
                 paint.setAntiAlias(true);
 
