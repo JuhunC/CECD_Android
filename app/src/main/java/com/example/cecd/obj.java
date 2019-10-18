@@ -74,6 +74,8 @@ public class obj extends BaseAdapter {
                     // we get  the position that we have set for the checkbox using setTag.
                     mylist.get(getPosition).setChecked(buttonView.isChecked()); // Set the value of checkbox to maintain its state.
 
+
+
                     if (isChecked) {
                         //do sometheing here
                     }

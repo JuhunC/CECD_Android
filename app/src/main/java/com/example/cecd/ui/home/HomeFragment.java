@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
     private static SharedViewModel svm = new SharedViewModel();
     private static Button imgsel,upload;
     private static ImageView img;
+    private static RelativeLayout loading_circle;
     //private static String path;
     //JSONObject mainObject; // coordinate value from the server
     private HomeViewModel homeViewModel;
@@ -56,6 +58,9 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        loading_circle = root.findViewById(R.id.loadingPanel);
+        loading_circle.setVisibility(View.INVISIBLE);
 
         img = root.findViewById(R.id.img);
         Ion.getDefault(getContext()).configure().setLogging("ion-sample", Log.DEBUG);
@@ -128,7 +133,7 @@ public class HomeFragment extends Fragment {
         MultipartBody.Part part = MultipartBody.Part.createFormData("image", file.getName(), fileReqBody);
         //Create request body with text description and text media type
         RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
-
+        loading_circle.setVisibility(View.VISIBLE);
         // Receive Object Coordinates from the Server as an JSON Object
         Call<String> call = uploadAPIs.uploadImage(part, description);
         call.enqueue(new Callback<String>() {
@@ -150,12 +155,15 @@ public class HomeFragment extends Fragment {
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
+                loading_circle.setVisibility(View.GONE);
                 Navigation.findNavController(getView()).navigate(R.id.action_navigation_home_to_navigation_dashboard);
             }
             @Override
             public void onFailure(Call<String> call, Throwable t){
+                loading_circle.setVisibility(View.GONE);
                 Log.e("Failed", t.getMessage());
                 t.printStackTrace();
+
             }
         });
     }
