@@ -49,8 +49,6 @@ public class HomeFragment extends Fragment {
     private static Button imgsel,upload;
     private static ImageView img;
     private static RelativeLayout loading_circle;
-    //private static String path;
-    //JSONObject mainObject; // coordinate value from the server
     private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -148,10 +146,7 @@ public class HomeFragment extends Fragment {
                         String key = keys.next();
                         Object val = svm.getSelected().get(key);
                         Log.e(key,val.toString());
-
                     }// end of while
-
-
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
@@ -163,7 +158,6 @@ public class HomeFragment extends Fragment {
                 loading_circle.setVisibility(View.GONE);
                 Log.e("Failed", t.getMessage());
                 t.printStackTrace();
-
             }
         });
     }

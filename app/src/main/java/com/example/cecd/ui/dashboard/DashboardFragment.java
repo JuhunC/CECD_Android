@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Picture;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.solver.widgets.Rectangle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import com.example.cecd.R;
 import com.example.cecd.obj;
@@ -30,16 +29,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements View.OnClickListener {
     private static SharedViewModel svm = new SharedViewModel();
     private DashboardViewModel dashboardViewModel;
     private static ImageView img, bit_Img;
     private static ListView object_list;
-    private static ArrayList<Data> objects;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
@@ -47,62 +46,23 @@ public class DashboardFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         // Parse JSON data into Data object
-        objects = parse(svm.getSelected());
+        svm.setObjects(parse(svm.getSelected()));
 
         // Add List of Objects to xml(object_list)
         object_list = root.findViewById(R.id.object_list);
         object_list.setVisibility(View.VISIBLE);
 
-        obj adapter=new obj(objects,getContext());
+        obj adapter=new obj(svm.objects,getContext());
 
         object_list.setAdapter(adapter);
 
         img = root.findViewById(R.id.img_dashboard);
 
-        // Draw Rectangle on the image using JSON data
+        // Draw Rectangle on the image
         this.update();
-
-//        // Show Image
-//        File imgFile = new  File(svm.getPath());
-//        if(imgFile.exists()){
-//            Log.e("path",svm.getPath());
-//
-//            Bitmap bmp=BitmapFactory.decodeFile(svm.getPath()).copy(Bitmap.Config.RGB_565, true);//(img.getHeight(),img.getWidth(),Bitmap.Config.RGB_565);
-//
-//            Canvas canvas = new Canvas(bmp);
-//            for(int i =0;i<objects.size();i++){
-//                Data data = objects.get(i);
-//                if(data.isChecked() == true){
-//                    Paint paint = new Paint();
-//                    paint.setStyle(Paint.Style.STROKE);
-//                    paint.setStrokeWidth(R.dimen.rectangle_stroke_thickness);
-//                    paint.setColor(Color.RED);
-//                    paint.setAntiAlias(true);
-//
-//                    // left, top, right, bottom
-//                    Rect rect = new Rect(
-//                            data.getX(),
-//                            data.getY(),
-//                            data.getWidth() + data.getX(),
-//                            data.getHeight() + data.getY()
-//                        );
-//
-//                    canvas.drawRect(rect, paint);
-//                }
-//            }
-//
-//
-//
-//
-//
-//            img.setImageBitmap(bmp);
-//        }else { // If there is no image
-//            getFragmentManager().popBackStack();
-//        }
 
         return root;
     }
-
 
     public static ArrayList<Data> parse(JSONObject json){
         ArrayList<Data> res = new ArrayList<>();
@@ -126,13 +86,10 @@ public class DashboardFragment extends Fragment {
 
     // Update Picture with Rectangles
     public static void update(){
-        Log.e("path",svm.getPath());
-
-        Bitmap bmp=BitmapFactory.decodeFile(svm.getPath()).copy(Bitmap.Config.RGB_565, true);//(img.getHeight(),img.getWidth(),Bitmap.Config.RGB_565);
-
+        Bitmap bmp=BitmapFactory.decodeFile(svm.getPath()).copy(Bitmap.Config.RGB_565, true);
         Canvas canvas = new Canvas(bmp);
-        for(int i =0;i<objects.size();i++){
-            Data data = objects.get(i);
+        for(int i =0;i<svm.getObjects().size();i++){
+            Data data = svm.objects.get(i);
             if(data.isChecked() == true){
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.STROKE);
@@ -147,12 +104,9 @@ public class DashboardFragment extends Fragment {
                         data.getWidth() + data.getX(),
                         data.getHeight() + data.getY()
                 );
-
                 canvas.drawRect(rect, paint);
             }
         }
-
-//            bit_Img = root.findViewById(R.id.bit_img_dashboard);
         img.setImageBitmap(bmp);
     }
     @Override
@@ -167,5 +121,21 @@ public class DashboardFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onClick(View view){
+        switch(view.getId()){
+            case R.id.add_object_btn:
 
+
+
+                break;
+            case R.id.regenerate_btn:
+                // TODO : send data to server for regeneration
+
+                Navigation.findNavController(getView()).navigate(R.id.action_navigation_dashboard_to_navigation_notifications);
+                break;
+            default:
+                Log.e("Unknown OnClick Event", view.getId()+"");
+        }
+    }
 }

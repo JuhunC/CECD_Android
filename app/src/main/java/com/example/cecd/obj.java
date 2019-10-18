@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class obj extends BaseAdapter {
 
     private Context mContext;
-    ArrayList<Data> mylist=new ArrayList<>();
+    ArrayList<Data> mylist;
 
 
     public obj(ArrayList<Data> itemArray,Context mContext) {

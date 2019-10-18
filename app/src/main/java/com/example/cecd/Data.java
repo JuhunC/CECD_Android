@@ -1,9 +1,5 @@
 package com.example.cecd;
 
-import org.json.JSONObject;
-
-import java.util.List;
-
 public class Data {
     private String label;
     private double accuracy;
