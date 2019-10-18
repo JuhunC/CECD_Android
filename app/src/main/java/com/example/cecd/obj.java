@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.example.cecd.ui.dashboard.DashboardFragment;
+
 import java.util.ArrayList;
 
 /**
@@ -73,7 +75,7 @@ public class obj extends BaseAdapter {
                     int getPosition = (Integer) buttonView.getTag(); // Here
                     // we get  the position that we have set for the checkbox using setTag.
                     mylist.get(getPosition).setChecked(buttonView.isChecked()); // Set the value of checkbox to maintain its state.
-
+                    DashboardFragment.update();
 
 
                     if (isChecked) {
