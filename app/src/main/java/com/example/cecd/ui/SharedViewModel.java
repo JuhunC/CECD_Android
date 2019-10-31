@@ -10,6 +10,8 @@ public class SharedViewModel {
     private static JSONObject label_data;
     private static String path ="";
     public static ArrayList<Data> objects;
+    public static String image_file_dir;
+
     public void select(JSONObject json_object){
         label_data = json_object;
     }
