@@ -79,7 +79,7 @@ public class DashboardFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Log.e("Path",svm.getPath());
-                uploadToServerForRegeneration(svm.getPath(), SharedViewModel.objects);
+                uploadToServerForRegeneration(SharedViewModel.objects);
             }
 
         });
@@ -176,7 +176,7 @@ public class DashboardFragment extends Fragment{
 //                Log.e("Unknown OnClick Event", view.getId()+"");
 //        }
 //    }
-    private void uploadToServerForRegeneration(String filePath, ArrayList<Data> objects){
+    private void uploadToServerForRegeneration(ArrayList<Data> objects){
         JSONObject paramObj = new JSONObject();
         try {
             for (Data data : objects) {
