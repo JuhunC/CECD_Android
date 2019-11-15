@@ -1,4 +1,4 @@
-package com.example.cecd.ui.dashboard;
+package com.example.cecd.ui.selection;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,22 +42,23 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class DashboardFragment extends Fragment{
-    private DashboardViewModel dashboardViewModel;
-    private static ImageView img, bit_Img;
+public class SelectionFragment extends Fragment{
+    private SelectionViewModel selectionViewModel;
+    private static ImageView img;
     private static ListView object_list;
     private static RelativeLayout loading_circle;
     private static Button regenerate_btn, add_object_btn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        selectionViewModel =
+                ViewModelProviders.of(this).get(SelectionViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_selection, container, false);
 
         // Parse JSON data into Data object
-        SharedViewModel.setObjects(this.parse(SharedViewModel.getSelected()));
-
+        if(SharedViewModel.getSelected() != null) {
+            SharedViewModel.setObjects(this.parse(SharedViewModel.getSelected()));
+        }
         // Add List of Objects to xml(object_list)
         object_list = root.findViewById(R.id.object_list);
         object_list.setVisibility(View.VISIBLE);
@@ -77,10 +78,10 @@ public class DashboardFragment extends Fragment{
             }
 
         });
-        obj adapter=new obj(SharedViewModel.objects,getContext());
-
-        object_list.setAdapter(adapter);
-
+        if(SharedViewModel.objects != null) {
+            obj adapter = new obj(SharedViewModel.objects, getContext());
+            object_list.setAdapter(adapter);
+        }
         img = root.findViewById(R.id.img_dashboard);
 
         // Draw Rectangle on the image
@@ -119,6 +120,7 @@ public class DashboardFragment extends Fragment{
 
     // Update Picture with Rectangles
     public static void update(){
+        if(SharedViewModel.getObjects() == null) return;
         Bitmap bmp=BitmapFactory.decodeFile(SharedViewModel.getPath()).copy(Bitmap.Config.RGB_565, true);
         Canvas canvas = new Canvas(bmp);
         for(int i =0;i<SharedViewModel.getObjects().size();i++){
@@ -192,7 +194,7 @@ public class DashboardFragment extends Fragment{
                         // display the image data in a ImageView or save it
                         SharedViewModel.bitmap = BitmapFactory.decodeStream(response.body().byteStream());
                         loading_circle.setVisibility(View.GONE);
-                        Navigation.findNavController(getView()).navigate(R.id.action_navigation_dashboard_to_navigation_notifications);
+                        Navigation.findNavController(getView()).navigate(R.id.action_navigation_selection_to_navigation_result);
                     } else {
                         Log.e("No Response Body","");
                     }

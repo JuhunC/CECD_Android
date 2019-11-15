@@ -1,4 +1,4 @@
-package com.example.cecd.ui.home;
+package com.example.cecd.ui.start;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -44,17 +44,17 @@ import retrofit2.Retrofit;
 
 import static android.app.Activity.RESULT_OK;
 
-public class HomeFragment extends Fragment {
+public class StartFragment extends Fragment {
     private static Button imgsel,upload;
     private static ImageView img;
     private static RelativeLayout loading_circle;
-    private HomeViewModel homeViewModel;
+    private StartViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+                ViewModelProviders.of(this).get(StartViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_start, container, false);
 
         loading_circle = root.findViewById(R.id.loadingPanel);
         loading_circle.setVisibility(View.INVISIBLE);
@@ -136,7 +136,6 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                //Log.e("ResBody", response.toString());
                 try {
                     JSONObject mainObject = new JSONObject(response.body());
                     SharedViewModel.image_file_dir = mainObject.getString("image_file_dir");
@@ -145,13 +144,12 @@ public class HomeFragment extends Fragment {
                     while(keys.hasNext()){
                         String key = keys.next();
                         Object val = SharedViewModel.getSelected().get(key);
-                  //      Log.e(key,val.toString());
                     }// end of while
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
                 loading_circle.setVisibility(View.GONE);
-                Navigation.findNavController(getView()).navigate(R.id.action_navigation_home_to_navigation_dashboard);
+                Navigation.findNavController(getView()).navigate(R.id.action_navigation_start_to_navigation_selection);
             }
             @Override
             public void onFailure(Call<String> call, Throwable t){
