@@ -1,5 +1,7 @@
 package com.example.cecd.ui;
 
+import android.graphics.Bitmap;
+
 import com.example.cecd.Data;
 
 import org.json.JSONObject;
@@ -11,15 +13,16 @@ public class SharedViewModel {
     private static String path ="";
     public static ArrayList<Data> objects;
     public static String image_file_dir;
+    public static Bitmap bitmap;
 
-    public void select(JSONObject json_object){
+    public static void select(JSONObject json_object){
         label_data = json_object;
     }
-    public JSONObject getSelected(){
+    public static JSONObject getSelected(){
         return label_data;
     }
-    public void setPath(String path){ this.path = path;}
-    public String getPath(){return path;}
-    public void setObjects(ArrayList<Data> objects){this.objects = objects;}
-    public ArrayList<Data> getObjects(){return objects;}
+    public static void setPath(String path_){ path = path_;}
+    public static String getPath(){return path;}
+    public static void setObjects(ArrayList<Data> objects_){objects = objects_;}
+    public static ArrayList<Data> getObjects(){return objects;}
 }

@@ -45,7 +45,6 @@ import retrofit2.Retrofit;
 import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment {
-    private static SharedViewModel svm = new SharedViewModel();
     private static Button imgsel,upload;
     private static ImageView img;
     private static RelativeLayout loading_circle;
@@ -65,18 +64,18 @@ public class HomeFragment extends Fragment {
 
         imgsel = root.findViewById(R.id.select_img);
         upload = root.findViewById(R.id.uploading);
-        if(svm.getPath()==""){
+        if(SharedViewModel.getPath()==""){
             upload.setVisibility(View.INVISIBLE);
         }else{
-            Bitmap myBitmap = BitmapFactory.decodeFile(svm.getPath());
+            Bitmap myBitmap = BitmapFactory.decodeFile(SharedViewModel.getPath());
             img.setImageBitmap(myBitmap);
             upload.setVisibility(View.VISIBLE);
         }
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Path",svm.getPath());
-                uploadToServer(svm.getPath()); // Upload to Server
+                Log.e("Path",SharedViewModel.getPath());
+                uploadToServer(SharedViewModel.getPath()); // Upload to Server
             }
 
         });
@@ -104,7 +103,7 @@ public class HomeFragment extends Fragment {
             case 100:
                 if (resultCode == RESULT_OK) {
                     String path = getPathFromURI(data.getData());
-                    svm.setPath(path);
+                    SharedViewModel.setPath(path);
                     img.setImageURI(data.getData());
                     upload.setVisibility(View.VISIBLE);
 
@@ -137,15 +136,16 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.e("ResBody", response.toString());
+                //Log.e("ResBody", response.toString());
                 try {
                     JSONObject mainObject = new JSONObject(response.body());
-                    svm.select(mainObject);
-                    Iterator<String> keys = svm.getSelected().keys();
+                    SharedViewModel.image_file_dir = mainObject.getString("image_file_dir");
+                    SharedViewModel.select(mainObject);
+                    Iterator<String> keys = SharedViewModel.getSelected().keys();
                     while(keys.hasNext()){
                         String key = keys.next();
-                        Object val = svm.getSelected().get(key);
-                        Log.e(key,val.toString());
+                        Object val = SharedViewModel.getSelected().get(key);
+                  //      Log.e(key,val.toString());
                     }// end of while
                 }catch(JSONException e){
                     e.printStackTrace();

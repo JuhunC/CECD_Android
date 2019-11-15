@@ -25,30 +25,24 @@ import androidx.navigation.Navigation;
 import com.example.cecd.DeleteAPIs;
 import com.example.cecd.NetworkClient;
 import com.example.cecd.R;
-import com.example.cecd.UploadAPIs;
 import com.example.cecd.obj;
 import com.example.cecd.ui.SharedViewModel;
 import com.example.cecd.Data;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class DashboardFragment extends Fragment{
-    private static SharedViewModel svm = new SharedViewModel();
     private DashboardViewModel dashboardViewModel;
     private static ImageView img, bit_Img;
     private static ListView object_list;
@@ -62,7 +56,7 @@ public class DashboardFragment extends Fragment{
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         // Parse JSON data into Data object
-        svm.setObjects(parse(svm.getSelected()));
+        SharedViewModel.setObjects(this.parse(SharedViewModel.getSelected()));
 
         // Add List of Objects to xml(object_list)
         object_list = root.findViewById(R.id.object_list);
@@ -78,12 +72,12 @@ public class DashboardFragment extends Fragment{
         regenerate_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Path",svm.getPath());
+                Log.e("Path",SharedViewModel.getPath());
                 uploadToServerForRegeneration(SharedViewModel.objects);
             }
 
         });
-        obj adapter=new obj(svm.objects,getContext());
+        obj adapter=new obj(SharedViewModel.objects,getContext());
 
         object_list.setAdapter(adapter);
 
@@ -96,9 +90,11 @@ public class DashboardFragment extends Fragment{
     }
 
     public static ArrayList<Data> parse(JSONObject json){
+        Log.e("JSON", json.toString());
         ArrayList<Data> res = new ArrayList<>();
         Iterator<String> keys = json.keys();
         try {
+
             while (keys.hasNext()) {
                 String key = keys.next();
                 if(key.equals("image_file_dir")) {
@@ -123,10 +119,10 @@ public class DashboardFragment extends Fragment{
 
     // Update Picture with Rectangles
     public static void update(){
-        Bitmap bmp=BitmapFactory.decodeFile(svm.getPath()).copy(Bitmap.Config.RGB_565, true);
+        Bitmap bmp=BitmapFactory.decodeFile(SharedViewModel.getPath()).copy(Bitmap.Config.RGB_565, true);
         Canvas canvas = new Canvas(bmp);
-        for(int i =0;i<svm.getObjects().size();i++){
-            Data data = svm.objects.get(i);
+        for(int i =0;i<SharedViewModel.getObjects().size();i++){
+            Data data = SharedViewModel.objects.get(i);
             if(data.isChecked() == true){
                 Paint paint = new Paint();
                 paint.setStyle(Paint.Style.STROKE);
@@ -158,24 +154,6 @@ public class DashboardFragment extends Fragment{
         }
         return super.onOptionsItemSelected(item);
     }
-//    @Override
-//    public void onClick(View view){
-//        switch(view.getId()){
-//            case R.id.add_object_btn:
-//
-//
-//
-//                break;
-//            case R.id.regenerate_btn:
-//                Log.e("REGENERATE","NOW");
-//                // TODO : send data to server for regeneration
-//                uploadToServerForRegeneration(svm.getPath(), SharedViewModel.objects);
-//                Navigation.findNavController(getView()).navigate(R.id.action_navigation_dashboard_to_navigation_notifications);
-//                break;
-//            default:
-//                Log.e("Unknown OnClick Event", view.getId()+"");
-//        }
-//    }
     private void uploadToServerForRegeneration(ArrayList<Data> objects){
         JSONObject paramObj = new JSONObject();
         try {
@@ -205,32 +183,31 @@ public class DashboardFragment extends Fragment{
         //RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramObj.toString());
         String str = paramObj.toString();
         Log.e("str",str);
-        Call<String> call = deleteAPIs.deleteObjectImage(str);
-        call.enqueue(new Callback<String>() {
+        Call<ResponseBody> call = deleteAPIs.deleteObjectImage(str);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Log.e("ResBody", response.toString());
-                try {
-                    JSONObject mainObject = new JSONObject(response.body());
-                    svm.select(mainObject);
-                    Iterator<String> keys = svm.getSelected().keys();
-                    while(keys.hasNext()){
-                        String key = keys.next();
-                        Object val = svm.getSelected().get(key);
-                        Log.e(key,val.toString());
-                    }// end of while
-                }catch(JSONException e){
-                    e.printStackTrace();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        // display the image data in a ImageView or save it
+                        SharedViewModel.bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                        loading_circle.setVisibility(View.GONE);
+                        Navigation.findNavController(getView()).navigate(R.id.action_navigation_dashboard_to_navigation_notifications);
+                    } else {
+                        Log.e("No Response Body","");
+                    }
+                } else {
+                    Log.e("Response Unsuccessful", "");
                 }
                 loading_circle.setVisibility(View.GONE);
-                Navigation.findNavController(getView()).navigate(R.id.action_navigation_dashboard_to_navigation_notifications);
             }
             @Override
-            public void onFailure(Call<String> call, Throwable t){
+            public void onFailure(Call<ResponseBody> call, Throwable t){
                 loading_circle.setVisibility(View.GONE);
                 Log.e("Failed", t.getMessage());
                 t.printStackTrace();
             }
         });
     }
+
 }
