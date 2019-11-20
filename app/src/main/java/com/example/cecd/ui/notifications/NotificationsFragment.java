@@ -29,12 +29,6 @@ public class NotificationsFragment extends Fragment {
         final ImageView imgView = root.findViewById(R.id.img_notification);
         imgView.setImageBitmap(SharedViewModel.bitmap);
 
-//        notificationsViewModel.getText().observe(this, new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
         return root;
     }
 }
