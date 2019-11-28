@@ -3,31 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_start">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.cecd.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/navigation_start"
+        android:name="com.example.cecd.ui.start.StartFragment"
+        android:label="@string/title_start"
+        tools:layout="@layout/fragment_start" >
         <action
-            android:id="@+id/action_navigation_home_to_navigation_dashboard"
-            app:destination="@id/navigation_dashboard" />
+            android:id="@+id/action_navigation_start_to_navigation_selection"
+            app:destination="@id/navigation_selection" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.cecd.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" >
+        android:id="@+id/navigation_selection"
+        android:name="com.example.cecd.ui.selection.SelectionFragment"
+        android:label="@string/title_selection"
+        tools:layout="@layout/fragment_selection" >
         <action
-            android:id="@+id/action_navigation_dashboard_to_navigation_notifications"
-            app:destination="@id/navigation_notifications" />
+            android:id="@+id/action_navigation_selection_to_navigation_result"
+            app:destination="@id/navigation_result" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.cecd.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_result"
+        android:name="com.example.cecd.ui.result.ResultFragment"
+        android:label="@string/title_result"
+        tools:layout="@layout/fragment_result" />
 </navigation>

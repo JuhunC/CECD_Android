@@ -2,9 +2,7 @@ package com.example.cecd;
 
 import android.content.Context;
 import android.util.Log;
-
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -18,9 +16,9 @@ public class NetworkClient {
     public static Retrofit getRetrofitClient(Context context) {
         if (retrofit == null) {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(50, TimeUnit.SECONDS)
-                    .writeTimeout(50,TimeUnit.SECONDS)
-                    .readTimeout(50,TimeUnit.SECONDS)
+                    .connectTimeout(100, TimeUnit.SECONDS)
+                    .writeTimeout(100,TimeUnit.SECONDS)
+                    .readTimeout(100,TimeUnit.SECONDS)
                     .build();
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)

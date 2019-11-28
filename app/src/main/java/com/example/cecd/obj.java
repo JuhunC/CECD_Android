@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.example.cecd.ui.dashboard.DashboardFragment;
+import com.example.cecd.ui.selection.SelectionFragment;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,6 @@ public class obj extends BaseAdapter {
 
     private Context mContext;
     ArrayList<Data> mylist;
-
 
     public obj(ArrayList<Data> itemArray,Context mContext) {
         super();
@@ -44,14 +43,9 @@ public class obj extends BaseAdapter {
         return position;
     }
 
-    public void onItemSelected(int position) {
-
-    }
-
     public class ViewHolder {
         public TextView nametext;
         public CheckBox tick;
-
     }
 
     @Override
@@ -75,19 +69,9 @@ public class obj extends BaseAdapter {
                     int getPosition = (Integer) buttonView.getTag(); // Here
                     // we get  the position that we have set for the checkbox using setTag.
                     mylist.get(getPosition).setChecked(buttonView.isChecked()); // Set the value of checkbox to maintain its state.
-                    DashboardFragment.update();
-
-
-                    if (isChecked) {
-                        //do sometheing here
-                    }
-                    else
-                    {
-                        // code here
-                    }
+                    SelectionFragment.update();
                 }
             });
-
             convertView.setTag(view);
         } else {
             view = (ViewHolder) convertView.getTag();

@@ -1,10 +1,13 @@
 package com.example.cecd;
 
+/**
+ * Data Class - for saving location of one object
+ */
 public class Data {
     private String label;
-    private double accuracy;
+    private double accuracy;            // [0,1]
     private int x,y, width, height;
-    private boolean checked = true;
+    private boolean checked = true;     // Selection for Regeneration
     public Data(String label, double accuracy, int start_x, int start_y, int end_x, int end_y){
         this.label = label;
         this.accuracy = accuracy;
